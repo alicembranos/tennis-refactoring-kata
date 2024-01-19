@@ -7,7 +7,8 @@ namespace Tests;
 use TennisGame\TennisGame3;
 
 /**
- * TennisGame1 test case.
+ * TennisGame3 test case.
+ * @group tennis3
  */
 class TennisGame3Test extends TestMaster
 {

@@ -6,36 +6,71 @@ namespace TennisGame;
 
 class TennisGame3 implements TennisGame
 {
-    private int $p2 = 0;
+    private const SCORES_NAMES = ['Love', 'Fifteen', 'Thirty', 'Forty'];
 
-    private int $p1 = 0;
+    private const DEUCE = 'Deuce';
+
+    private int $pointsPlayer1 = 0;
+
+    private int $pointsPlayer2 = 0;
 
     public function __construct(
-        private string $p1N,
-        private string $p2N
+        private string $player1Name,
+        private string $player2Name
     ) {
     }
 
     public function getScore(): string
     {
-        if ($this->p1 < 4 && $this->p2 < 4 && ! ($this->p1 + $this->p2 === 6)) {
-            $p = ['Love', 'Fifteen', 'Thirty', 'Forty'];
-            $s = $p[$this->p1];
-            return ($this->p1 === $this->p2) ? "{$s}-All" : "{$s}-{$p[$this->p2]}";
+        if (! $this->hasEnoughPointsToWin()) {
+            return $this->generalScore();
         }
-        if ($this->p1 === $this->p2) {
-            return 'Deuce';
+
+        if ($this->isTied()) {
+            return self::DEUCE;
         }
-        $s = $this->p1 > $this->p2 ? $this->p1N : $this->p2N;
-        return (($this->p1 - $this->p2) * ($this->p1 - $this->p2) === 1) ? "Advantage {$s}" : "Win for {$s}";
+
+        if ($this->inAdvantage()) {
+            return "Advantage {$this->getLeader()}";
+        }
+
+        return "Win for {$this->getLeader()}";
     }
 
     public function wonPoint(string $playerName): void
     {
-        if ($playerName === 'player1') {
-            $this->p1++;
-        } else {
-            $this->p2++;
-        }
+        $this->isPlayer1($playerName) ? $this->pointsPlayer1++ : $this->pointsPlayer2++;
+    }
+
+    private function hasEnoughPointsToWin(): bool
+    {
+        return ! ($this->pointsPlayer1 < 4 && $this->pointsPlayer2 < 4 && ! ($this->pointsPlayer1 + $this->pointsPlayer2 === 6));
+    }
+
+    private function inAdvantage(): bool
+    {
+        return abs($this->pointsPlayer1 - $this->pointsPlayer2) === 1;
+    }
+
+    private function generalScore(): string
+    {
+        $scorePlayer1 = self::SCORES_NAMES[$this->pointsPlayer1];
+        $scorePlayer2 = self::SCORES_NAMES[$this->pointsPlayer2];
+        return $this->isTied() ? "{$scorePlayer1}-All" : "{$scorePlayer1}-{$scorePlayer2}";
+    }
+
+    private function getLeader(): string
+    {
+        return $this->pointsPlayer1 > $this->pointsPlayer2 ? $this->player1Name : $this->player2Name;
+    }
+
+    private function isTied(): bool
+    {
+        return $this->pointsPlayer1 === $this->pointsPlayer2;
+    }
+
+    private function isPlayer1(string $playerName): bool
+    {
+        return $playerName === $this->player1Name;
     }
 }
