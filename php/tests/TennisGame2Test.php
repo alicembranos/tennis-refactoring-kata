@@ -8,6 +8,7 @@ use TennisGame\TennisGame2;
 
 /**
  * TennisGame1 test case.
+ * @group tennis2
  */
 class TennisGame2Test extends TestMaster
 {

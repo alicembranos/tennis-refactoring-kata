@@ -16,3 +16,6 @@ tests-tennisGame3:
 
 tests-tennisGame1:
 	./vendor/bin/phpunit --group tennis1
+
+tests-tennisGame2:
+	./vendor/bin/phpunit --group tennis2
